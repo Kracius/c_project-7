@@ -1,0 +1,192 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "bugprone-branch-clone"
+
+#include <iostream>
+
+using namespace std;
+enum Figures {
+    SQUARE,
+    TRIANGLE,
+    HOUSE,
+    SQUAREINSQUARE,
+    TEST
+};
+
+enum FillingTypes {
+    HOLLOW,
+    FULL
+};
+
+void printSq();
+
+void printTr();
+
+void printHouse();
+
+void printSqInSq();
+
+void test();
+
+bool debug = true;
+
+int main() {
+    int figure;
+    if (!debug) {
+        printf("Жду фигуру\n");
+        cin >> figure;
+    } else figure = 4;
+    switch (figure) {
+        case SQUARE:
+            printSq();
+            break;
+        case TRIANGLE:
+            printTr();
+            break;
+        case HOUSE:
+            printHouse();
+            break;
+        case SQUAREINSQUARE:
+            printSqInSq();
+            break;
+        case TEST:
+            test();
+            break;
+        default:
+            printf("Не знаю такого.\n");
+    }
+    return 0;
+}
+
+void test() {
+    int size;
+    if (!debug) {
+        printf("Жду размер\n");
+        cin >> size;
+    } else size = 31;
+    for (int y = 0; y < size; ++y) {
+        for (int x = 0; x < size; ++x) {
+            if(x % 2 == 0 || y % 2 == 0) {
+                printf("#");
+            }
+            else
+                printf(".");
+        }
+        printf("\n");
+    }
+}
+
+void printSqInSq() {
+    int size;
+    if (!debug) {
+        printf("Жду размер\n");
+        cin >> size;
+    } else size = 31;
+
+    bool **Display = new bool *[size];
+
+    for (int i = 0; i < size; i++) {
+        Display[i] = new bool[size];
+    }
+    int check = size / 2 / 2 + size / 2 % 2 + size % 2;
+
+    for (int i = 0; i < check; ++i) {
+        for (int y = 0 + i * 2; y < size - i * 2; y++)
+            for (int x = 0 + i * 2; x < size - i * 2; x++)
+                Display[x][y] = (x == 0 + i * 2 || x == size - i * 2 - 1 || y == 0 + i * 2 || y == size - i * 2 - 1);
+    }
+
+    for (int y = 0; y < size; y++) {
+        for (int x = 0; x < size; x++)
+            cout << (Display[x][y] ? "* " : "  ");;
+        cout << endl;
+    }
+}
+
+void printHouse() {
+    int size;
+    printf("Жду размер\n");
+    cin >> size;
+    //TR
+    for (int y = 0; y < size; y += 2) {
+        for (int x = 0; x < size; x++) {
+            if ((x * 2 <= size && (size - y) / 2 <= x) || (x * 2 >= size && y >= x * 2 - size))
+                printf("@");
+            else
+                printf(" ");
+        }
+        printf("\n");
+    }
+    //Sq
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (((i == 0 || i == size - 1 || j == 0 || j == size - 1))) {
+                printf("@");
+            } else printf(" ");
+
+            if (j == size - 1)
+                printf("\n");
+        }
+    }
+}
+
+void printTr() {
+    int type;
+    int size;
+    printf("Жду тип\n");
+    cin >> type;
+    printf("Жду размер\n");
+    cin >> size;
+    if (type != HOLLOW && type != FULL) {
+        printf("Неа.");
+        return;
+    }
+    if (type == FULL) {
+        for (int y = 0; y < size; y += 2) {
+            for (int x = 0; x < size; x++) {
+                if ((x * 2 <= size && (size - y) / 2 <= x) || (x * 2 >= size && y >= x * 2 - size))
+                    printf("@");
+                else
+                    printf(" ");
+            }
+            printf("\n");
+        }
+    } else {
+        int j;
+        for (int i = 0; i < size; i++) {
+            for (j = size - i; j > 0; j--)
+                printf(" ");
+
+            for (j = 0; j <= 2 * i; j++) {
+                if (j < 2 * i && j > 0 && i != (size - 1))
+                    printf(" ");
+                else
+                    printf("@");
+            }
+            printf("\n");
+        }
+    }
+}
+
+void printSq() {
+    int type;
+    int size;
+    printf("Жду тип\n");
+    cin >> type;
+    printf("Жду размер\n");
+    cin >> size;
+    if (type != HOLLOW && type != FULL) {
+        printf("Неа.");
+        return;
+    }
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size; ++j) {
+            if (((i == 0 || i == size - 1 || j == 0 || j == size - 1) && type == HOLLOW) || type == FULL) {
+                printf("@ ");
+            } else if (type == HOLLOW) {
+                printf("  ");
+            }
+            if (j == size - 1)
+                printf("\n");
+        }
+    }
+}
